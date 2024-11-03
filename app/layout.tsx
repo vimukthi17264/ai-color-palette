@@ -6,6 +6,7 @@ import { Playwrite_ID } from 'next/font/google'
 
 // Define the font object, specifying weights, subsets, or styles as needed
 import { Inter } from 'next/font/google'
+import Navbar from "@/components/navbar";
  
 // If loading a variable font, you don't need to specify the font weight
 const inter = Inter({
@@ -39,6 +40,7 @@ export default function RootLayout({
       <body
         className={`${inter.className} antialiased dark`}
       >
+        <Navbar/>
         {children}
         <Toaster/>
       </body>

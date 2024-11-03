@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/table"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
+import { PlusCircledIcon } from "@radix-ui/react-icons"
 
 export default function Tablegenerator() {
   const [showInitial, setShowInitial] = React.useState(true)
@@ -88,14 +89,19 @@ export default function Tablegenerator() {
   if (!showInitial) {
     return (
       <div className="container mx-auto p-4 max-w-6xl">
-        <Card>
+        <Card className="border-0">
           <CardContent className="p-6">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-2xl font-bold">Generated Table</h2>
-              <Button onClick={exportData}>
-                <Download className="mr-2 h-4 w-4" />
-                Export CSV
+              <div className=" space-x-2">
+              <Button onClick={exportData} variant={'ghost'} size={'icon'}>
+                <Download/>
               </Button>
+              <Button onClick={exportData} variant={'outline'}>
+                <PlusCircledIcon className="mr-2" />
+                New Table
+              </Button>
+              </div>
             </div>
             <div className="rounded-md border overflow-x-auto">
               <Table>
