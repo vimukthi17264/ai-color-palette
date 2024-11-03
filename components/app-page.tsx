@@ -4,7 +4,7 @@ import * as React from "react"
 import { Download, Loader2, Plus, Send, X } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
+import { Card, CardContent, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import {
   Table,
@@ -25,7 +25,7 @@ export default function Tablegenerator() {
   const [tableData, setTableData] = React.useState<any[][]>([])
   const [prompt, setPrompt] = React.useState("")
   const [isLoading, setIsLoading] = React.useState(false)
- const {toast} = useToast()
+  const { toast } = useToast()
 
   const addHeader = () => {
     if (newHeader.trim()) {
@@ -73,7 +73,7 @@ export default function Tablegenerator() {
       headers.join(','),
       ...tableData.map(row => row.join(','))
     ].join('\n')
-    
+
     const blob = new Blob([csvContent], { type: 'text/csv' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
@@ -123,14 +123,14 @@ export default function Tablegenerator() {
     )
   }
 
-  return (
-    <div className="container mx-auto p-4 max-w-4xl">
-      <div className="space-y-8 text-center">
-        <h1 className="text-4xl font-bold tracking-tighter">
-          Dynamic Table Generator
+  return (<div className="flex justify-center items-center min-h-screen">
+    <div className="container mx-auto p-4 max-w-5xl text-left">
+      <div className="space-y-8">
+        <h1 className="text-4xl font-bold tracking-tighter text-center">
+          How can I assist with your data needs today?
         </h1>
         <Card>
-          <CardContent className="p-6">
+          <CardContent className="p-6 space-y-4">
             <div className="space-y-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium">Table Headers</label>
@@ -172,7 +172,7 @@ export default function Tablegenerator() {
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium">Describe your data (optional)</label>
+                <label className="text-sm font-medium">Describe your data</label>
                 <Textarea
                   placeholder="E.g., Generate a table of fictional characters with their powers and origins..."
                   value={prompt}
@@ -199,7 +199,20 @@ export default function Tablegenerator() {
             </div>
           </CardContent>
         </Card>
+        <Card className="border-0">
+          <CardContent>
+            <div className="flex flex-row text-sm text-center text-gray-500">
+              <p>Generate a table of popular programming languages and their key features.</p>
+              <p>Create a list of common exercises for strength training with instructions.</p>
+              <p>List fictional characters with their unique powers and origin stories.</p>
+            </div>
+          </CardContent>
+        </Card>
+        <div className="w-full text-center">
+          <a href="https://x.com/highendstriker">@highendstriker</a>
+        </div>
       </div>
     </div>
+  </div>
   )
 }
