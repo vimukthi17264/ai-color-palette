@@ -18,31 +18,28 @@ export default function Navbar() {
             <div className="container mx-auto p-4 flex justify-between items-center">
 
                 {/* Desktop Links */}
-                <div className="hidden md:flex space-x-2 text-gray-100 text-xs">
-                    <Link href="/features" className="hover:text-indigo-200">Features</Link>
-                    <Link href="/pricing" className="hover:text-indigo-200">Pricing</Link>
-                    <Link href="/about" className="hover:text-indigo-200">About</Link>
-                    <Link href="/contact" className="hover:text-indigo-200">Contact</Link>
-                    <Link href="/faq" className="hover:text-indigo-200">FAQ</Link>
-
+                <div className="hidden md:flex space-x-2 text-xs">
+                    <Link href="/features" className="hover:underline">Features</Link>
+                    <Link href="/pricing" className="hover:underline">Pricing</Link>
+                    <Link href="/about" className="hover:underline">About</Link>
+                    <Link href="/contact" className="hover:underline">Contact</Link>
+                    <Link href="/faq" className="hover:underline">FAQ</Link>
                 </div>
-
-
-
                 {/* CTA Button for Buy Credits */}
-                <div className="hidden md:block">
+                <div className="hidden md:block space-x-2">
                     <Link href={'/pricing'}>
-                        <Button className="px-4 py-2 text-black">
+                        <Button>
                             <PlusIcon />
                             Credits
                         </Button>
                     </Link>
+                    <ModeToggle/>
                 </div>
 
                 {/* Mobile Menu Toggle Button */}
-                <button onClick={toggleMobileMenu} className="md:hidden text-gray-100">
+                <Button onClick={toggleMobileMenu} className="md:hidden" size={'icon'} variant={'ghost'}>
                     {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-                </button>
+                </Button>
             </div>
 
             {/* Mobile Menu */}
@@ -61,4 +58,40 @@ export default function Navbar() {
             )}
         </nav>
     )
+}
+
+import { MoonIcon, SunIcon } from "@radix-ui/react-icons"
+import { useTheme } from "next-themes"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
+export function ModeToggle() {
+  const { setTheme } = useTheme()
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" size="icon">
+          <SunIcon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+          <MoonIcon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+          <span className="sr-only">Toggle theme</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem onClick={() => setTheme("light")}>
+          Light
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme("dark")}>
+          Dark
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme("system")}>
+          System
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
 }

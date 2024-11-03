@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
-import { Playwrite_ID } from 'next/font/google'
 
 // Define the font object, specifying weights, subsets, or styles as needed
 import { Inter } from 'next/font/google'
 import Navbar from "@/components/navbar";
+import { ThemeProvider } from "@/components/theme-provider";
  
 // If loading a variable font, you don't need to specify the font weight
 const inter = Inter({
@@ -38,11 +38,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.className} antialiased dark`}
+        className={`${inter.className} antialiased`}
       >
+        <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+         >
         <Navbar/>
         {children}
         <Toaster/>
+        </ThemeProvider>
       </body>
     </html>
   );
