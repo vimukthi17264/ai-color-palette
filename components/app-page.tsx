@@ -16,7 +16,8 @@ import {
 } from "@/components/ui/table"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
-import { PlusCircledIcon } from "@radix-ui/react-icons"
+import { PlusCircledIcon, PlusIcon } from "@radix-ui/react-icons"
+import Link from "next/link"
 
 export default function Tablegenerator() {
   const [showInitial, setShowInitial] = React.useState(true)
@@ -97,10 +98,12 @@ export default function Tablegenerator() {
               <Button onClick={exportData} variant={'ghost'} size={'icon'}>
                 <Download/>
               </Button>
-              <Button onClick={exportData} variant={'outline'}>
-                <PlusCircledIcon className="mr-2" />
+              <Link href={'/'}>
+              <Button variant={'outline'}>
+                <PlusIcon className="mr-2" />
                 New Table
               </Button>
+              </Link>
               </div>
             </div>
             <div className="rounded-md border overflow-x-auto">
