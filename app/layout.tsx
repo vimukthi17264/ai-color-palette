@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Inter } from 'next/font/google'
 import Navbar from "@/components/navbar";
 import { ThemeProvider } from "@/components/theme-provider";
+import FeedbackCollector from "@/components/feedback-collector";
  
 // If loading a variable font, you don't need to specify the font weight
 const inter = Inter({
@@ -36,20 +37,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${inter.className} antialiased`}
       >
         <ThemeProvider
             attribute="class"
             defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
          >
         <Navbar/>
         {children}
-        <Toaster/>
         </ThemeProvider>
+        <FeedbackCollector autoOpenCondition={false}/>
+        <Toaster/>
       </body>
     </html>
   );
