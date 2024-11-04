@@ -8,15 +8,25 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
+
+// Define an interface for the payment history items
+interface Payment {
+    payment_id: string;
+    amount: string;
+    currency_from: string;
+    currency_to: string;
+    status: string;
+    created_at: string;
+}
 
 export default function AccountPage() {
-    const [paymentHistory, setPaymentHistory] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [paymentHistory, setPaymentHistory] = useState<Payment[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
 
     // Mock data for demonstration; replace with actual API call in a real application
-    const mockPaymentHistory = [
+    const mockPaymentHistory: Payment[] = [
         {
             payment_id: "123456",
             amount: "100",
@@ -60,7 +70,7 @@ export default function AccountPage() {
                 // Mock data for demonstration
                 setPaymentHistory(mockPaymentHistory);
             } catch (err) {
-                setError(err.message);
+                setError(err instanceof Error ? err.message : "Unknown error");
             } finally {
                 setLoading(false);
             }
@@ -93,13 +103,13 @@ export default function AccountPage() {
                     </TableHeader>
                     <TableBody>
                         {paymentHistory.map((payment) => (
-                            <TableRow>
+                            <TableRow key={payment.payment_id}> {/* Add a unique key here */}
                                 <TableCell>{payment.payment_id}</TableCell>
                                 <TableCell>{payment.amount}</TableCell>
                                 <TableCell>{payment.currency_from}</TableCell>
                                 <TableCell>{payment.currency_to}</TableCell>
                                 <TableCell>{payment.created_at}</TableCell>
-                                <TableCell>{payment.status}</TableCell>
+                                <TableCell style={{ color: getStatusColor(payment.status) }}>{payment.status}</TableCell> {/* Optional: Set status color */}
                             </TableRow>
                         ))}
                     </TableBody>
@@ -110,11 +120,11 @@ export default function AccountPage() {
 }
 
 // Helper functions
-function capitalize(string) {
+function capitalize(string: string): string {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-function getStatusColor(status) {
+function getStatusColor(status: string): string {
     switch (status) {
         case "completed":
             return "green";
