@@ -28,6 +28,7 @@ export default function Tablegenerator() {
   const [prompt, setPrompt] = React.useState("")
   const [isLoading, setIsLoading] = React.useState(false)
   const { toast } = useToast()
+  const [actionCompleted, setActionCompleted] = React.useState(false);
 
   const addHeader = () => {
     if (newHeader.trim()) {
@@ -49,6 +50,8 @@ export default function Tablegenerator() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ headers, rowCount, prompt }),
+
+
       })
 
       if (!response.ok) {
@@ -58,6 +61,14 @@ export default function Tablegenerator() {
       const data = await response.json()
       setTableData(data)
       setShowInitial(false)
+
+      // Set action as completed
+      setActionCompleted(true);
+
+      // Trigger the share prompt
+      window.dispatchEvent(new Event('triggerSharePrompt'));
+
+
     } catch (error) {
       console.error('Error generating table:', error)
       toast({
@@ -96,13 +107,13 @@ export default function Tablegenerator() {
               <h2 className="text-2xl font-bold">Generated Table</h2>
               <div className=" space-x-2">
                 <ExportDataButton headers={headers} tableData={tableData} />
-                
-                  <Button variant={'outline'} onClick={() => {
-                    window.location.reload();
-                  }}>
-                    <PlusIcon className="mr-2" />
-                    New Table
-                  </Button>
+
+                <Button variant={'outline'} onClick={() => {
+                  window.location.reload();
+                }}>
+                  <PlusIcon className="mr-2" />
+                  New Table
+                </Button>
               </div>
             </div>
             <p className="text-xs text-muted-foreground"> I'm powered by AI, so surprises and mistakes are possible. Make sure to verify any generated code or suggestions, and share feedback so that we can learn and improve.</p>
@@ -130,6 +141,7 @@ export default function Tablegenerator() {
             </div>
           </CardContent>
         </Card>
+        <FeedbackCollector autoOpenCondition={false} />
       </div>
     )
   }
@@ -139,8 +151,8 @@ export default function Tablegenerator() {
       <div className="container mx-auto p-4 max-w-5xl text-left">
         <div className="space-y-8">
           <h1 className="text-4xl font-bold tracking-tighter text-center">
-            How can I assist with your data needs today?
-          </h1>
+          How can I help with your data needs?
+           </h1>
           <Card className="bg-muted/40">
             <CardContent className="p-6 space-y-4">
               <div className="space-y-4">
@@ -240,6 +252,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import FeedbackCollector from "./feedback-collector"
 
 // Define the prop types
 interface ExportDataButtonProps {
@@ -248,7 +261,7 @@ interface ExportDataButtonProps {
 }
 
 const ExportDataButton: React.FC<ExportDataButtonProps> = ({ headers, tableData }) => {
-  
+
   const generateBlobAndDownload = (content: string, fileType: string, fileExtension: string) => {
     const blob = new Blob([content], { type: fileType });
     const url = URL.createObjectURL(blob);
@@ -263,8 +276,8 @@ const ExportDataButton: React.FC<ExportDataButtonProps> = ({ headers, tableData 
 
   const exportCSV = () => {
     const csvContent = [
-      headers.join(','), 
-      ...tableData.map(row => 
+      headers.join(','),
+      ...tableData.map(row =>
         row.map(cell => `"${cell.toString().replace(/"/g, '""')}"`).join(',')
       ),
     ].join('\n');
@@ -283,7 +296,7 @@ const ExportDataButton: React.FC<ExportDataButtonProps> = ({ headers, tableData 
 
   const exportXML = () => {
     const xmlData = tableData.map(row => {
-      const rowData = headers.map((header, index) => 
+      const rowData = headers.map((header, index) =>
         `<${header}>${row[index]}</${header}>`
       ).join('');
       return `<row>${rowData}</row>`;
@@ -295,7 +308,7 @@ const ExportDataButton: React.FC<ExportDataButtonProps> = ({ headers, tableData 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-          <Download className="h-4 w-4"/>
+        <Download className="h-4 w-4" />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel>Export as</DropdownMenuLabel>

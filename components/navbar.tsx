@@ -12,6 +12,7 @@ export default function Navbar() {
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!isMobileMenuOpen)
   }
+  
 
   return (
     <nav>
@@ -21,9 +22,10 @@ export default function Navbar() {
         <div className="hidden md:flex space-x-2 text-xs">
 
           <Link href="/" className="hover:underline">Home</Link>
-          
+
           <Link href="/pricing" className="hover:underline"></Link>
           <Link href="/faq" className="hover:underline">FAQ</Link>
+          <Link href="/examples" className="hover:underline">Examples</Link>
         </div>
         {/* CTA Button for Buy Credits */}
         <div className="hidden md:block space-x-2">
@@ -33,6 +35,10 @@ export default function Navbar() {
               Credits
             </Button>
           </Link>
+          <Share
+            title="Check out this awesome tool!"
+            text="I just discovered this amazing tool that helps with..."
+          />
           <ModeToggle />
         </div>
 
@@ -68,6 +74,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import Share from "./share"
 
 export function ModeToggle() {
   const { setTheme } = useTheme()

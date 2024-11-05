@@ -1,45 +1,98 @@
 'use client';
+
 import { useState, useEffect } from 'react';
+import { createClient } from '@supabase/supabase-js';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from './ui/button';
-import { Textarea } from './ui/textarea';
-import { Input } from './ui/input';
-import { StarIcon } from '@radix-ui/react-icons'; // Adjust import based on your icon library
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
+import { StarIcon } from '@radix-ui/react-icons';
+import { useToast } from '@/hooks/use-toast';
 
-// Define the props interface
+// Initialize Supabase client
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
+
 interface FeedbackCollectorProps {
-    autoOpenCondition: boolean; // Specify the type for autoOpenCondition
-  }
-  
+  autoOpenCondition: boolean;
+}
+
 const FeedbackCollector: React.FC<FeedbackCollectorProps> = ({ autoOpenCondition }) => {
-    const [feedback, setFeedback] = useState('');
+  const [feedback, setFeedback] = useState('');
   const [email, setEmail] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [rating, setRating] = useState(0); // State for star rating
+  const [rating, setRating] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
-    if (autoOpenCondition) {
-      const timer = setTimeout(() => setIsOpen(true), 2000); // Opens dialog after 2 seconds
-      return () => clearTimeout(timer); // Clean up timer on component unmount
-    }
+    const checkFeedbackStatus = () => {
+      const lastPrompt = localStorage.getItem('lastFeedbackPrompt');
+      const hasFeedback = localStorage.getItem('hasFeedback');
+
+      if (hasFeedback === 'true') {
+        return; // Don't show if feedback was already provided
+      }
+
+      const currentDate = new Date().toDateString();
+
+      if (!lastPrompt || lastPrompt !== currentDate) {
+        if (autoOpenCondition) {
+          const timer = setTimeout(() => setIsOpen(true), 2000);
+          localStorage.setItem('lastFeedbackPrompt', currentDate);
+          return () => clearTimeout(timer);
+        }
+      }
+    };
+
+    checkFeedbackStatus();
   }, [autoOpenCondition]);
 
-  const handleSubmit = () => {
-    console.log('Feedback:', feedback);
-    console.log('Email:', email);
-    console.log('Rating:', rating);
-    setIsSubmitted(true);
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    try {
+      const { data, error } = await supabase
+        .from('feedback')
+        .insert([
+          { feedback, email, rating }
+        ]);
+
+      if (error) throw error;
+
+      setIsSubmitted(true);
+      localStorage.setItem('hasFeedback', 'true');
+      toast({
+        title: "Feedback Submitted",
+        description: "Thank you for your feedback!",
+      });
+    } catch (error) {
+      console.error('Error submitting feedback:', error);
+      toast({
+        title: "Error",
+        description: "Failed to submit feedback. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleClose = () => {
+    setIsOpen(false);
+    // If the user closes without submitting, we still don't want to show it again today
+    localStorage.setItem('lastFeedbackPrompt', new Date().toDateString());
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent>
         <DialogTitle>We Value Your Feedback</DialogTitle>
         <DialogDescription>Please let us know your thoughts so we can improve.</DialogDescription>
@@ -59,7 +112,8 @@ const FeedbackCollector: React.FC<FeedbackCollectorProps> = ({ autoOpenCondition
                     className={`w-6 h-6 cursor-pointer transition-colors duration-200 ${rating >= star ? 'text-yellow-500' : 'text-gray-300'}`}
                     onClick={() => setRating(star)}
                     onMouseEnter={() => setRating(star)}
-                    onMouseLeave={() => setRating(0)} // Optional: Reset rating on mouse leave
+                    onMouseLeave={() => setRating(rating)}
+                    aria-label={`Rate ${star} stars`}
                   />
                 ))}
               </div>
@@ -87,8 +141,13 @@ const FeedbackCollector: React.FC<FeedbackCollectorProps> = ({ autoOpenCondition
               />
             </div>
 
-            <div className="mt-6 flex justify-end">
-              <Button onClick={handleSubmit}>Submit</Button>
+            <div className="mt-6 flex justify-end space-x-2">
+              <Button onClick={handleClose} variant="outline">
+                Maybe Later
+              </Button>
+              <Button onClick={handleSubmit} disabled={isSubmitting}>
+                {isSubmitting ? 'Submitting...' : 'Submit'}
+              </Button>
             </div>
           </>
         )}
