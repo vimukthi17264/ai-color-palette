@@ -4,7 +4,7 @@ import * as React from "react"
 import { Download, Loader2, Plus, Send, X } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import {
   Table,
@@ -16,8 +16,7 @@ import {
 } from "@/components/ui/table"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
-import { PlusCircledIcon, PlusIcon } from "@radix-ui/react-icons"
-import Link from "next/link"
+import { PlusIcon } from "@radix-ui/react-icons"
 
 export default function Tablegenerator() {
   const [showInitial, setShowInitial] = React.useState(true)
