@@ -180,7 +180,7 @@ export default function Tablegenerator() {
                       onChange={(e) => setNewHeader(e.target.value)}
                       onKeyPress={(e) => e.key === 'Enter' && addHeader()}
                     />
-                    <Button onClick={addHeader} variant="secondary">
+                    <Button onClick={addHeader} size={'icon'} variant={'secondary'}>
                       <Plus className="h-4 w-4" />
                     </Button>
                   </div>

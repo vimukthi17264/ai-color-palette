@@ -138,7 +138,7 @@ export default function CreditPackages() {
           currency_to: selectedCurrency,
           order_id: `order_${Date.now()}`,
           success_url: `${window.location.origin}/payment-success`,
-          ipn_callback_url: `${window.location.origin}/api/nowpayments/ipn-handler`
+          ipn_callback_url: `https://bqqyvtionavtgtzrdmrp.supabase.co/functions/v1/ipn-callback`
         }),
       });
   
