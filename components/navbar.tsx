@@ -13,7 +13,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-
 import { UserProfileMenu } from "./components-user-profile-menu"
 import { useAuth } from "@/hooks/use-auth"
 import Share from "./share"
