@@ -232,9 +232,6 @@ export default function Tablegenerator() {
               </div>
             </CardContent>
           </Card>
-          <div className="w-full text-center">
-            <p>made by <a href="https://twitter.com/highendstriker" className="text-blue-500">@highendstriker</a></p>
-          </div>
         </div>
       </div>
     </div>

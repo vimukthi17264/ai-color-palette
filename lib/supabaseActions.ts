@@ -176,7 +176,7 @@ export const deleteUserProfile = async (userId: string) => {
  * @returns list of transactions
  */
 export const fetchUserTransactions = async (userId: string) => {
-  let { data: payments, error } = await supabase
+  const { data: payments, error } = await supabase
     .from('payments')
     .select('*')
     .eq('user_id', userId)
