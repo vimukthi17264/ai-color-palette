@@ -13,6 +13,8 @@ export async function POST(req:NextRequest) {
       order_id,
       success_url,
       ipn_callback_url,
+      is_fixed_rate:true,
+
     }, {
       headers: { 'x-api-key': process.env.NOWPAYMENTS_API_KEY },
     });

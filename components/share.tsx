@@ -81,7 +81,7 @@ const Share: React.FC<ShareProps> = ({ title, text }) => {
 
   return (
     <>
-      <Button onClick={handleShare} variant="outline" className='text-pink-500'>
+      <Button onClick={handleShare} variant="ghost" className='text-pink-500'>
         <Share2Icon className="mr-2 h-4 w-4" /> Share
       </Button>
 

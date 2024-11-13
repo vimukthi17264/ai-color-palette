@@ -1,19 +1,17 @@
-// app/api/nowpayments/payment-status/route.js
+// app/api/nowpayments/payment-status/route.ts
 import axios from 'axios';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
   const { payment_id } = await req.json();
 
-  // Check if we're in development mode or if we're using a mock environment variable
   const isMockMode = process.env.NEXT_PUBLIC_MOCK_NOWPAYMENTS === 'true';
 
   if (isMockMode) {
-    console.log('Runnning on Moke mode')
-    // Mock data to simulate a successful response from NOWPayments
+    console.log('Running in Mock mode');
     const mockResponse = {
       payment_id: payment_id,
-      payment_status: 'confirmed',
+      payment_status: 'confirming',
       pay_amount: '0.0025',
       pay_currency: 'BTC',
       price_amount: '100',
@@ -21,24 +19,23 @@ export async function POST(req: NextRequest) {
       created_at: new Date().toISOString(),
     };
 
-    return new NextResponse(JSON.stringify(mockResponse), { status: 200 });
+    return NextResponse.json(mockResponse);
   }
 
-  // Real API call when not in mock mode
-  console.log('Running in Real mode')
+  console.log('Running in Real mode');
   try {
     const response = await axios.get(`https://api.nowpayments.io/v1/payment/${payment_id}`, {
       headers: { 'x-api-key': process.env.NOWPAYMENTS_API_KEY },
     });
 
-    return new NextResponse(JSON.stringify(response.data), { status: 200 });
+    return NextResponse.json(response.data);
   } catch (error) {
     console.error('Error fetching payment status:', error);
 
-    function isAxiosError(error: any): error is { response: { data: { message: string } } } {
-      return error.response && error.response.data && typeof error.response.data.message === 'string';
+    if (axios.isAxiosError(error) && error.response) {
+      return NextResponse.json({ error: error.response.data.message }, { status: error.response.status });
     }
 
-    const errorMessage = isAxiosError(error) ? error.response.data.message : 'Failed to fetch payment status'; return new NextResponse(JSON.stringify({ error: errorMessage }), { status: 500 });
+    return NextResponse.json({ error: 'Failed to fetch payment status' }, { status: 500 });
   }
 }

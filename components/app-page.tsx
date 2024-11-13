@@ -2,7 +2,6 @@
 
 import * as React from "react"
 import { Download, Loader2, Plus, Send, X } from "lucide-react"
-
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -146,10 +145,12 @@ export default function Tablegenerator() {
   }
 
   return (
+    <>
+    <AuthNavbar/>
     <div className="flex justify-center items-center min-h-screen">
       <div className="container mx-auto p-4 max-w-5xl text-left">
         <div className="space-y-8">
-          <h1 className="text-4xl font-bold tracking-tighter text-center">
+          <h1 className="text-5xl font-bold tracking-tighter text-center">
           How can I help with your data needs?
            </h1>
           <Card className="bg-muted/40">
@@ -237,6 +238,7 @@ export default function Tablegenerator() {
         </div>
       </div>
     </div>
+    </>
   )
 }
 
@@ -252,6 +254,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import FeedbackCollector from "./feedback-collector"
+import Navbar from "./navbar"
+import AuthNavbar from "./auth-navbar"
 
 // Define the prop types
 interface ExportDataButtonProps {

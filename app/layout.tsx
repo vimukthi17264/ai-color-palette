@@ -5,9 +5,8 @@ import { Toaster } from "@/components/ui/toaster";
 
 // Define the font object, specifying weights, subsets, or styles as needed
 import { Inter } from 'next/font/google'
-import Navbar from "@/components/navbar";
 import { ThemeProvider } from "@/components/theme-provider";
-import FeedbackCollector from "@/components/feedback-collector";
+import Footer from "@/components/footer";
  
 // If loading a variable font, you don't need to specify the font weight
 const inter = Inter({
@@ -45,10 +44,10 @@ export default function RootLayout({
             attribute="class"
             defaultTheme="system"
          >
-        <Navbar/>
         {children}
-        </ThemeProvider>
+        <Footer/>
         <Toaster/>
+        </ThemeProvider>
       </body>
     </html>
   );
